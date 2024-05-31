@@ -1,0 +1,13 @@
+---
+applications:
+- name: very-simple-tcp-server
+  memory: 1G
+  instances: 1
+  path: target/very-simple-tcp-server-1.0-SNAPSHOT.jar
+  buildpacks:
+    - java_buildpack_offline
+  routes:
+    - route: test.tcp.tas.lab.sampsoftware.net:30000
+  env:
+    JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'
+  health-check-type: process
