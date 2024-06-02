@@ -2,19 +2,17 @@ package tcproutes.lab.sampsoftware.net;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+import org.springframework.boot.builder.SpringApplicationBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @SpringBootApplication
 public class App implements CommandLineRunner {
@@ -24,53 +22,44 @@ public class App implements CommandLineRunner {
     
     private final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+//    public static void main(String[] args) {
+  //      SpringApplication.run(App.class, args);
+    //}
     public static void main(String[] args) {
-        SpringApplication.run(App.class, args);
-    }
-
-    class Worker implements Runnable {
-
-        Socket client;
-        byte[] buffer = new byte[1000];
-
-        Worker(Socket client) {
-            this.client = client;
-        }
-
-        @Override
-        public void run() {
-            try{
-               
-               InputStream stream = client.getInputStream();
-               int bytesRead = 0;
-               boolean end = false;
-               
-                bytesRead += stream.read(buffer);
-                log.info("bytesRead={}",bytesRead);
-               log.info("TThe incoming request is:[{}]", new String(buffer,0,106));
-
-            } catch (IOException ioe) {
-                log.error("SocketChannel write error: ", ioe);
-            }
-        }
-    }
-
-
+        new SpringApplicationBuilder(App.class)
+            .web(WebApplicationType.NONE) // .REACTIVE, .SERVLET
+            .run(args);
+     }
+  
     @Override
     public void run(String... args) throws Exception {
 
-        final ExecutorService threadPool = Executors.newFixedThreadPool(50);
-        this.log.info("Starting APP");
+        log.info("Starting APP");
         ServerSocket server = new ServerSocket(this.port);
 
         while(true) {
-            this.log.info("Listening at {} on port {}", server.getInetAddress().getHostAddress(), server.getLocalPort());
+            log.info("Listening at {} on port {}", server.getInetAddress().getHostAddress(), server.getLocalPort());
+            byte[] buffer = new byte[1000];
+
             Socket client = server.accept();
             client.setSoTimeout(5000);
-            this.log.info("Received connection from {}", client.getRemoteSocketAddress().toString());
+            log.info("Received connection from {}", client.getRemoteSocketAddress().toString());
+            log.info(client.toString());
+            log.info(server.toString());
 
-            threadPool.execute(new Worker(client));
-
+            try{
+                InputStream stream = client.getInputStream();
+                int bytesRead = 0;
+                boolean end = false;
+                
+                 bytesRead += stream.read(buffer);
+                 log.info("bytesRead={}",bytesRead);
+                log.info("TThe incoming request is:[{}]", new String(buffer,0,106));
+ 
+             } catch (IOException ioe) {
+                 log.error("SocketChannel write error: ", ioe);
+             }
+ 
         }
     }
 }

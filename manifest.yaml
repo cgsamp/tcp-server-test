@@ -7,7 +7,7 @@ applications:
   buildpacks:
     - java_buildpack_offline
   routes:
-    - route: test.tcp.tas.lab.sampsoftware.net:30000
+    - route: test.tcp.tas.lab.sampsoftware.net:48556
   env:
     JBP_CONFIG_OPEN_JDK_JRE: '{ jre: { version: 17.+ } }'
   health-check-type: process
