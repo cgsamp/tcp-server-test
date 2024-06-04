@@ -51,8 +51,9 @@ Ensure that the router group is updated to use the ports required if using custo
 
 ### CF Push
 
-`mvn clean package && cf push`
-`cf logs very-simple-tcp-server`
-`cf routes`
-`nc [IP of TCP Router] 30000 < testfile.bin`
-
+```
+mvn clean package && cf push
+cf logs very-simple-tcp-server
+cf routes
+nc [IP of TCP Router] 30000 < testfile.bin
+```
