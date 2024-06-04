@@ -22,9 +22,6 @@ public class App implements CommandLineRunner {
     
     private final Logger log = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-//    public static void main(String[] args) {
-  //      SpringApplication.run(App.class, args);
-    //}
     public static void main(String[] args) {
         new SpringApplicationBuilder(App.class)
             .web(WebApplicationType.NONE) // .REACTIVE, .SERVLET

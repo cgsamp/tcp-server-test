@@ -47,30 +47,12 @@ then
 
 `cf create-shared-domain test.tcp.tas.lab.sampsoftware.net --router-group default-tcp`
 
-Ensure that the router group is updated to use the ports required if using custom ports.
+Ensure that the router group is updated to use the ports required if using custom ports. By default, Diego will deliver traffic from any TCP Router port to port 8080 on the container.
 
 ### CF Push
 
 `mvn clean package && cf push`
 `cf logs very-simple-tcp-server`
 `cf routes`
-`nc test.tcp.tas.lab.sampsoftware.net 30000 < testfile.bin`
-
-...Nothing!
-
-### Logs
-```
-2024-05-31T14:26:11.37-0400 [APP/PROC/WEB/0] OUT 2024-05-31T18:26:11.369Z  INFO 8 --- [           main] tcproutes.lab.sampsoftware.net.App       : Starting App v1.0-SNAPSHOT using Java 17.0.9 with PID 8 (/home/vcap/app/BOOT-INF/classes started by vcap in /home/vcap/app)
-2024-05-31T14:26:11.37-0400 [APP/PROC/WEB/0] OUT 2024-05-31T18:26:11.373Z  INFO 8 --- [           main] tcproutes.lab.sampsoftware.net.App       : The following 1 profile is active: "cloud"
-2024-05-31T14:26:11.45-0400 [APP/PROC/WEB/0] OUT 2024-05-31T18:26:11.456Z  INFO 8 --- [           main] i.p.c.p.CloudProfileApplicationListener  : 'cloud' profile activated
-2024-05-31T14:26:12.39-0400 [APP/PROC/WEB/0] OUT 2024-05-31T18:26:12.393Z  INFO 8 --- [           main] tcproutes.lab.sampsoftware.net.App       : Started App in 1.605 seconds (process running for 2.255)
-2024-05-31T14:26:12.40-0400 [APP/PROC/WEB/0] OUT 2024-05-31T18:26:12.407Z  INFO 8 --- [           main] tcproutes.lab.sampsoftware.net.App       : Starting APP
-2024-05-31T14:26:12.42-0400 [APP/PROC/WEB/0] OUT 2024-05-31T18:26:12.418Z  INFO 8 --- [           main] tcproutes.lab.sampsoftware.net.App       : Listening at 0.0.0.0 on port 8080
-```
-
-### Comments
-
-Why nothing?
-
-If I create a http route, the app does receive traffic.
+`nc [IP of TCP Router] 30000 < testfile.bin`
 
